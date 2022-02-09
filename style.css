@@ -1,3 +1,9 @@
 .overlap { 
     position: fixed; 
 }
+
+p {
+    border-color: black;
+    border-radius: 10px;
+    border-width: 50px;
+}

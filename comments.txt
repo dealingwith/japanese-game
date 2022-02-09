@@ -39,3 +39,63 @@ for (let i = 0; i < 3; i++) {
     plots.push(new Plot(25+i*125, 25, 100, 100));
 }
 */
+
+// PLANT STUFF
+/*
+class Plant {
+    constructor(x, y, img_names) {
+        this.x = x;
+        this.y = y;
+        this.img_names = img_names;
+        this.stage = 0;
+
+        // idk what these are
+        this.width = 50;
+        this.height = 50; 
+    }
+
+    draw() {
+        ctx.drawImage(this.img_names[this.stage], this.x, this.y);
+    }
+
+    grow() {
+        if (this.stage !== this.img_names.length - 1 && randint(1, 100) === 1) {
+            this.stage++;
+        }
+    }
+}
+
+class Plot {
+    
+    constructor(x, y, width, height, color, plants) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = color;
+        this.plants = plants;
+    }
+    
+    draw() {
+        for (let plant of this.plants) {
+            plant.draw();
+        }
+    }
+
+    detect_collect(x, y) {
+        for (let plant of this.plants) {
+            if (between([x, y], [plant.x, plant.y], [plant.x+plant.width, plant.y+plant.height])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    grow() {
+        for (let plant of this.plants) {
+            plant.grow();
+        }
+    }
+        
+}
+*/
