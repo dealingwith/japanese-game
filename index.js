@@ -7,6 +7,15 @@ function rect(x, y, width, height, color) {
     ctx.closePath();
 }
 
+function fill_text(text, x, y, font_sz, color="black", font="sans-serif") {
+    ctx.beginPath();
+    ctx.font = `${font_sz}px ${font}`;
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.fillText(text, x, y);
+    ctx.closePath();
+}
+
 function between(val, low, high) {
     if (typeof val === "object") { // checking if point is between 2 points
         return between(val[0], low[0], high[0]) && between(val[1], low[1], high[1]);
@@ -95,8 +104,7 @@ class Area {
         rect(canvas.width-10, canvas.height/2 + 20, 10, 5, "brown");
     }
 
-    background() {
-        rect(0, 0, canvas.width, canvas.height, this.bg_color);
+    background() { rect(0, 0, canvas.width, canvas.height, this.bg_color);
         if (this.bg_img) {
             ctx.drawImage(this.bg_img, 0, 0);
         }
@@ -116,6 +124,19 @@ class Area {
     }
 
 }
+
+function popup(text, x, y, width, height, font_sz, color="black", bg_color="white", font="sans-serif", padding=10) {
+    let p = document.getElementById("text");
+    p.setAttribute("style", `margin: ${y+8}px ${x+8}px; width: ${width}px; height: ${height}px; padding: ${padding}px;
+        font-size: ${font_sz}px; color: ${color}; background-color: ${bg_color}; font-family: ${font};`)
+    p.innerHTML = text;
+}
+
+function remove_popup() {
+    let p = document.getElementById("text");
+    p.innerHTML = "";
+}
+
 
 // PLANT STUFF
 /*
