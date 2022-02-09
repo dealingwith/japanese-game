@@ -83,6 +83,32 @@ class Entity {
 
 }
 
+class ImgEntity extends Entity {
+    x; y; dx; dy; r; color;
+
+    constructor(x, y, dx=0, dy=0, img, label=null) {
+        super()
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+        this.label = label;
+
+        if (img) {
+            this.img = new Image();
+            this.img.src = img;
+        }
+    }
+
+    draw() {
+        ctx.drawImage(this.img, this.x, this.y);
+
+        if (this.label) {
+            fill_text(this.label, this.x - parseInt(this.label.length/3*10), this.y - 20, 14, "white");
+        }
+    }
+}
+
 class Player extends Entity {
     x; y; dx; dy; r; color;
 
@@ -156,10 +182,15 @@ const ctx = canvas.getContext("2d");
 
 let player = new Player(500, 300, 0, 0, 10, "Player");
 let samurai1 = new Entity(50, 225, 0, 0, 10, "Samurai 陽翔", "red");
+let test = new ImgEntity(100, 50, 0, 0, "rice_plant.png");
+let plants = [];
+let origamis = [];
 
-let tmp_area = new Area([], "blue", null, null, null, null);
+let tmp_area = new Area([], "blue", null, null, null, null, "volcanic_landscape2.png");
+let tmp2_area = new Area([], "yellow", null, null, tmp_area, null, "shinto_shrine.png");
 let cur_area = new Area([], "#C4A484", null, tmp_area, null, null, "volcanic_landscape.jpg");
 tmp_area.west = cur_area;
+tmp_area.north = tmp2_area;
 
 function tick() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -178,6 +209,15 @@ function tick() {
         samurai1.tick();
     }
 
+    if (cur_area.bg_color === "blue") {
+        for (let plant of plants) {
+            plant.tick();
+        }
+    } else if (cur_area.bg_color === "yellow") {
+        for (let origami of origamis) {
+            origami.tick();
+        }
+    }
     player.tick();
 }
 
@@ -191,6 +231,13 @@ function keyDownHandler(e) {
     if (e.key === "Left" || e.key === "ArrowLeft") player.dx = -2;
     if (e.key === "Up" || e.key === "ArrowUp") player.dy = -2;
     if (e.key === "Down" || e.key === "ArrowDown") player.dy = 2;
+    if (e.keyCode === 32) {// 32 key code is space
+        if (player.y > 280 && cur_area.bg_color === "blue") {
+            plants.push(new ImgEntity(player.x, player.y, 0, 0, "rice_plant.png")); 
+        } else if (cur_area.bg_color === "yellow") {
+            origamis.push(new ImgEntity(player.x, player.y, 0, 0, "origami_crane.png")); 
+        }
+    }
 }
 
 function keyUpHandler(e) {

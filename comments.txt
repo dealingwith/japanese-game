@@ -99,3 +99,29 @@ class Plot {
         
 }
 */
+
+// GROWABLE ENTITY CLASSA
+
+class GrowableEntity extends Entity {
+
+    x; y; dx; dy;
+
+    constructor(x, y, dx=0, dy=0, imgs, label=null) {
+        super();
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+        this.img = img;
+        this.label = label;
+    }
+
+    draw() {
+        ctx.drawImage(this.img, this.x, this.y);
+
+        if (this.label) {
+            fill_text(this.label, this.x - parseInt(this.label.length/3*10), this.y - 20, 14, "white");
+        }
+    }
+
+}
