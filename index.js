@@ -17,16 +17,24 @@ function fill_text(text, x, y, font_sz, color="black", font="sans-serif") {
 }
 
 function popup(text, x, y, width, height="auto", font_sz=14, color="black", bg_color="white", font="sans-serif", padding=10) {
-    let p = document.getElementById("text");
+    let p = document.getElementById("text1");
+    //if (p.innerHTML !== "" && p.innerHTML !== text) p = document.getElementById("text2");
+    if ( p.innerHTML !== text) p = document.getElementById("text2");
     p.setAttribute("style", `margin: ${y+8}px ${x+8}px; width: ${width}px; height: ${height}px; padding: ${padding}px;
         font-size: ${font_sz}px; color: ${color}; background-color: ${bg_color}; font-family: ${font};`)
     p.innerHTML = text;
 }
 
-function remove_popup() {
-    let p = document.getElementById("text");
-    p.innerHTML = "";
-    p.setAttribute("style", "");
+function remove_popup(number=1) {
+    if (number === 1) {
+        let p = document.getElementById("text1");
+        p.innerHTML = "";
+        p.setAttribute("style", "");
+    } else {
+        let p = document.getElementById("text2");
+        p.innerHTML = "";
+        p.setAttribute("style", "");
+    }
 }
 
 function between(val, low, high) {
@@ -162,16 +170,58 @@ class Area {
     }
 
     change_area(x, y, r) {
-        if (this.north && between([x, y-r], [canvas.width/2 - 25, 0], [canvas.width/2 + 25, 10])) {
-            return this.north;
+        if (between([x, y-r], [canvas.width/2 - 25, 0], [canvas.width/2 + 25, 10])) {
+            if (this.north) {
+                draw_samurai2 = false;
+                return this.north;
+            } else {
+                this.denied_change_area(x, y);
+                return null;
+            }
         }
-        if (this.south && between([x, y+r], [canvas.width/2 - 25, canvas.height-10], [canvas.width/2 + 25, canvas.height])) 
-            return this.south;
-        if (this.west && between([x-r, y], [0, canvas.height/2 - 25], [10, canvas.height/2 + 25]))
-            return this.west;
-        if (this.east && between([x+r, y], [canvas.width-10, canvas.height/2 - 25], [canvas.width, canvas.height/2 + 25]))
-            return this.east;
+
+        if (between([x, y+r], [canvas.width/2 - 25, canvas.height-10], [canvas.width/2 + 25, canvas.height])) {
+            if (this.south) {
+                draw_samurai2 = false;
+                return this.south;
+            } else {
+                this.denied_change_area(x, y);
+                return null;
+            }
+        }
+
+        if (between([x-r, y], [0, canvas.height/2 - 25], [10, canvas.height/2 + 25])) {
+            if (this.west) {
+                draw_samurai2 = false;
+                return this.west;
+            } else {
+                this.denied_change_area(x, y);
+                return null;
+            }
+        }
+
+        if (between([x+r, y], [canvas.width-10, canvas.height/2 - 25], [canvas.width, canvas.height/2 + 25])) {
+            if (this.east) {
+                draw_samurai2 = false;
+                return this.east;
+            } else {
+                this.denied_change_area(x, y);
+                return null;
+            }
+        }
+
+        //if (cur_area.bg_color !== "#C4A484") {
+        //    draw_samurai2 = false;
+       // }
+
         return null;
+    }
+
+    denied_change_area(x, y) {
+        samurai2.x = x;
+        samurai2.y = y;
+        samurai2.say("Hey you! You can't leave this land! You're a PEASANT. You have to farm in the land your Daimyo told you to farm in. You should know the social hierarchy! Emperor > Shogun > Daimyo > Samurai > Ronin > Peasants > Artisans > Merchants. You're waaaaay at the bottom.");
+        draw_samurai2 = true;
     }
 
 }
@@ -182,6 +232,10 @@ const ctx = canvas.getContext("2d");
 
 let player = new Player(500, 300, 0, 0, 10, "Player");
 let samurai1 = new Entity(50, 225, 0, 0, 10, "Samurai 陽翔", "red");
+let samurai2 = new Entity(-10, -10, 0, 0, 10, "Samurai 陽菜", "red");
+
+let draw_samurai2 = false;
+
 let test = new ImgEntity(100, 50, 0, 0, "rice_plant.png");
 let plants = [];
 let origamis = [];
@@ -218,6 +272,18 @@ function tick() {
             origami.tick();
         }
     }
+
+    if (draw_samurai2) {
+        samurai2.tick();
+    } else {
+        if (cur_area.bg_color === "#C4A484") {
+            remove_popup(2);
+        } else {
+            remove_popup(1);
+            remove_popup(2);
+        }
+    }
+    
     player.tick();
 }
 
