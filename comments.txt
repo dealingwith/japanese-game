@@ -1,0 +1,41 @@
+/* text 
+ctx.font = '48px serif';
+ctx.fillText('Hello world', 10, 50);
+*/
+
+/* circle
+ctx.beginPath();
+ctx.arc(240, 160, 20, 0, Math.PI*2, false);
+ctx.fillStyle = "green";
+ctx.fill();
+ctx.closePath();
+*/
+
+/*
+class Plot {
+    width; height; color;
+
+    constructor(x, y, width, height, color="brown") {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = color;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.rect(this.x, this.y, this.x+this.width, this.y+this.height);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+    }
+}
+*/
+
+/*
+let plots = [];
+for (let i = 0; i < 3; i++) {
+    plots.push(new Plot(25+i*125, 25, 100, 100));
+}
+*/
