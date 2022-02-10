@@ -45,27 +45,26 @@ function randint(min, max) {
 
 // ENTITY CLASS
 class Entity {
-    x; y; dx; dy; r; color;
 
-    constructor(x, y, dx=0, dy=0, r=10, label=null, color="blue") {
+    constructor(x, y, dx=0, dy=0, img, label=null, img_width=0, img_height=0) {
         this.x = x;
         this.y = y;
         this.dx = dx;
         this.dy = dy;
-        this.r = r;
         this.label = label;
-        this.color = color;
+
+        this.img = new Image();
+        this.img.src = img;
+
+        this.img_width = img_width;
+        this.img_height = img_height;
     }
 
     draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
-        ctx.fillStyle = this.color;
-        ctx.fill();
-        ctx.closePath();
+        ctx.drawImage(this.img, this.x, this.y);
 
         if (this.label) {
-            fill_text(this.label, this.x - parseInt(this.label.length/3*10), this.y - 20, 14, "white");
+            fill_text(this.label, this.x, this.y-5, 14, "white");
         }
     }
 
@@ -77,50 +76,9 @@ class Entity {
     }
 
     say(text) {
-        popup(text, this.x, this.y, 250);
+        popup(text, this.x+this.img_width, this.y+this.img_height, 250);
     }
 
-}
-
-class ImgEntity extends Entity {
-    x; y; dx; dy; r; color;
-
-    constructor(x, y, dx=0, dy=0, img, label=null) {
-        super()
-        this.x = x;
-        this.y = y;
-        this.dx = dx;
-        this.dy = dy;
-        this.label = label;
-
-        if (img) {
-            this.img = new Image();
-            this.img.src = img;
-        }
-    }
-
-    draw() {
-        ctx.drawImage(this.img, this.x, this.y);
-
-        if (this.label) {
-            fill_text(this.label, this.x - parseInt(this.label.length/3*10), this.y - 20, 14, "white");
-        }
-    }
-}
-
-class Player extends Entity {
-    x; y; dx; dy; r; color;
-
-    constructor(x, y, dx=0, dy=0, r=10, label=null, color="lightblue") {
-        super();
-        this.x = x;
-        this.y = y;
-        this.dx = dx;
-        this.dy = dy;
-        this.r = r;
-        this.label = label;
-        this.color = color;
-    }
 }
 
 // AREA CLASS
@@ -145,14 +103,14 @@ class Area {
             thing.draw();
         }
 
-        rect(canvas.width/2 - 25, 0, 5, 10, "brown");
-        rect(canvas.width/2 + 20, 0, 5, 10, "brown");
-        rect(canvas.width/2 - 25, canvas.height-10, 5, 10, "brown");
-        rect(canvas.width/2 + 20, canvas.height-10, 5, 10, "brown");
-        rect(0, canvas.height/2 - 25, 10, 5, "brown");
-        rect(0, canvas.height/2 + 20, 10, 5, "brown");
-        rect(canvas.width-10, canvas.height/2 - 25, 10, 5, "brown");
-        rect(canvas.width-10, canvas.height/2 + 20, 10, 5, "brown");
+        rect(canvas.width/2 - 35, 0, 5, 10, "brown");
+        rect(canvas.width/2 + 30, 0, 5, 10, "brown");
+        rect(canvas.width/2 - 35, canvas.height-10, 5, 10, "brown");
+        rect(canvas.width/2 + 30, canvas.height-10, 5, 10, "brown");
+        rect(0, canvas.height/2 - 35, 10, 5, "brown");
+        rect(0, canvas.height/2 + 30, 10, 5, "brown");
+        rect(canvas.width-10, canvas.height/2 - 35, 10, 5, "brown");
+        rect(canvas.width-10, canvas.height/2 + 30, 10, 5, "brown");
     }
 
     background() { 
@@ -162,8 +120,11 @@ class Area {
         }
     }
 
-    change_area(x, y, r) {
-        if (between([x, y-r], [canvas.width/2 - 25, 0], [canvas.width/2 + 25, 10])) {
+    change_area(x, _y, _width, _height) {
+        let width = _width/2;
+        let height = _height/2;
+        let y = _y+height;
+        if (between([x+width, y-height], [canvas.width/2 - 25, 0], [canvas.width/2 + 25, 10])) {
             if (this.north) {
                 draw_samurai2 = false;
                 this.is_denied_change_area = false;
@@ -175,7 +136,7 @@ class Area {
             }
         }
 
-        if (between([x, y+r], [canvas.width/2 - 25, canvas.height-10], [canvas.width/2 + 25, canvas.height])) {
+        if (between([x+width, y+height], [canvas.width/2 - 25, canvas.height-10], [canvas.width/2 + 25, canvas.height])) {
             if (this.south) {
                 draw_samurai2 = false;
                 this.is_denied_change_area = false;
@@ -187,7 +148,7 @@ class Area {
             }
         }
 
-        if (between([x-r, y], [0, canvas.height/2 - 25], [10, canvas.height/2 + 25])) {
+        if (between([x, y], [0, canvas.height/2 - 25], [10, canvas.height/2 + 25])) {
             if (this.west) {
                 draw_samurai2 = false;
                 this.is_denied_change_area = false;
@@ -199,7 +160,7 @@ class Area {
             }
         }
 
-        if (between([x+r, y], [canvas.width-10, canvas.height/2 - 25], [canvas.width, canvas.height/2 + 25])) {
+        if (between([x+width, y], [canvas.width-10, canvas.height/2 - 25], [canvas.width, canvas.height/2 + 25])) {
             if (this.east) {
                 draw_samurai2 = false;
                 this.is_denied_change_area = false;
@@ -228,13 +189,13 @@ class Area {
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 
-let player = new Player(500, 300, 0, 0, 10, "Player");
-let samurai1 = new Entity(50, 225, 0, 0, 10, "Samurai 陽翔", "red");
-let samurai2 = new Entity(-10, -10, 0, 0, 10, "Samurai 陽菜", "red");
+let player = new Entity(500, 300, 0, 0, "japanese_peasant.png", "Player", 60, 95);
+let samurai1 = new Entity(50, 225, 0, 0, "samurai.png", "Samurai 陽翔", 60, 62);
+let samurai2 = new Entity(-10, -10, 0, 0, "samurai.png", "Samurai 陽菜", 60, 62);
 
 let draw_samurai2 = false;
 
-let test = new ImgEntity(100, 50, 0, 0, "rice_plant.png");
+let test = new Entity(100, 50, 0, 0, "rice_plant.png");
 let plants = [];
 let origamis = [];
 
@@ -244,6 +205,7 @@ let cur_area = new Area([], "#C4A484", null, tmp_area, null, null, "volcanic_lan
 tmp_area.west = cur_area;
 tmp_area.north = tmp2_area;
 
+samurai2.tick();
 function tick() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     cur_area.background();
@@ -256,14 +218,10 @@ function tick() {
         samurai1.tick();
     }
 
-    if (draw_samurai2) {
-        samurai2.tick();
-    }
-
-    if (cur_area.change_area(player.x, player.y, player.r)) {
-        cur_area = cur_area.change_area(player.x, player.y, player.r);
-        if (!between(player.y, 10 + player.r, canvas.height - 10 - player.r)) player.y = canvas.height - player.y;
-        if (!between(player.x, 10 + player.r, canvas.width - 10 - player.r)) player.x = canvas.width - player.x;
+    if (cur_area.change_area(player.x, player.y, player.img_width, player.img_height)) {
+        cur_area = cur_area.change_area(player.x, player.y, player.img_width, player.img_height);
+        if (!between(player.y, 200, canvas.height - 200)) player.y = canvas.height - player.y - player.img_height;
+        if (!between(player.x, 200, canvas.width - 200)) player.x = canvas.width - player.x - player.img_width/2;
     }
 
     if (cur_area.bg_color === "blue") {
@@ -291,9 +249,9 @@ function keyDownHandler(e) {
     if (e.key === "Down" || e.key === "ArrowDown") player.dy = 2;
     if (e.keyCode === 32) {// 32 key code is space
         if (player.y > 280 && cur_area.bg_color === "blue") {
-            plants.push(new ImgEntity(player.x, player.y, 0, 0, "rice_plant.png")); 
+            plants.push(new Entity(player.x, player.y, 0, 0, "rice_plant.png")); 
         } else if (cur_area.bg_color === "yellow") {
-            origamis.push(new ImgEntity(player.x, player.y, 0, 0, "origami_crane.png")); 
+            origamis.push(new Entity(player.x, player.y, 0, 0, "origami_crane.png")); 
         }
     }
 }
