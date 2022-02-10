@@ -225,10 +225,12 @@ function tick() {
     }
 
     if (cur_area.bg_color === "yellow") {
-        shintoist.x = 50;
-        shintoist.y = 50;
+        shintoist.x = 30;
+        shintoist.y = 30;
         shintoist.tick();
-        shintoist.say("Hello! I haven't seen you before. Let me introduce you to the religion of Shinto. Us shintoists believe that all natural beings are alive, and have spirits. We ask the kami, the nature spirits, for help when we need it. To honor the kami, we worship at Shinto shrines.");
+        if (!cur_area.is_denied_change_area) {
+            shintoist.say("Hello! I haven't seen you before. Let me introduce you to the religion of Shinto. Us shintoists believe that all natural beings are alive, and have spirits. We ask the kami, the nature spirits, for help when we need it. To honor the kami, we worship and sacrifice at Shinto shrines. Since you don't look like you have anything to sacrifice, I'll give you some paper to make origami to sacrifice. Origami is a compound of the words \"ori\", meaning to fold, and \"kami\", meaning paper. It started when Chinese Buddhist monks carried paper to Japan in the 6th century, and was first only used for religious ceremonies because of the high price of paper. You can make origami too! Just press space.");
+        }
     } else {
         shintoist.x = -100;
         shintoist.y = -100;
