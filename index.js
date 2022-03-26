@@ -2,14 +2,40 @@
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 
-let player = new Entity(500, 300, 0, 0, "japanese_peasant.png", "Player", 60, 95);
-let samurai1 = new Entity(50, 225, 0, 0, "samurai.png", "Samurai 陽翔", 60, 62);
-let samurai2 = new Entity(-100, -100, 0, 0, "samurai.png", "Samurai 陽菜", 60, 62);
-let shintoist = new Entity(-100, -100, 0, 0, "japanese_peasant.png", "Shintoist 哲也", 60, 95, "black");
+let player = new Entity({
+  "x": 500,
+  "y": 300,
+  "dx": 0,
+  "dy": 0,
+  "img": "japanese_peasant.png",
+  "label": "Player",
+  "label_color": "white"
+});
+let base_samurai_properties = {
+  "x": 50,
+  "y": 225,
+  "dx": 0,
+  "dy": 0,
+  "img": "samurai.png",
+  "label": "Samurai 陽翔",
+  "label_color": "white"
+}
+let samurai1 = new Entity(base_samurai_properties);
+let samurai2_properties = {...base_samurai_properties};
+samurai2_properties.x = -100;
+samurai2_properties.y = -100;
+let samurai2 = new Entity(samurai2_properties);
+let shintoist = new Entity({
+  "x": -100,
+  "y": -100,
+  "dx": 0,
+  "dy": 0,
+  "img": "japanese_peasant.png",
+  "label": "Shintoist 哲也",
+  "label_color": "black"
+});
 
 let draw_samurai2 = false;
-
-let test = new Entity(100, 50, 0, 0, "rice_plant.png");
 let plants = [];
 let origamis = [];
 
@@ -66,23 +92,31 @@ function tick() {
     player.tick();
 }
 
-setInterval(tick, 10);
-
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
-
 function keyDownHandler(e) {
-    if (e.key === "Right" || e.key === "ArrowRight") player.dx = 2;
-    if (e.key === "Left" || e.key === "ArrowLeft") player.dx = -2;
-    if (e.key === "Up" || e.key === "ArrowUp") player.dy = -2;
-    if (e.key === "Down" || e.key === "ArrowDown") player.dy = 2;
+    if (e.key === "Right" || e.key === "ArrowRight") player.dx = 8;
+    if (e.key === "Left" || e.key === "ArrowLeft") player.dx = -8;
+    if (e.key === "Up" || e.key === "ArrowUp") player.dy = -8;
+    if (e.key === "Down" || e.key === "ArrowDown") player.dy = 8;
     if (e.keyCode === 32) {// 32 key code is space
         if (player.y > 280 && cur_area.bg_color === "blue") {
-            plants.push(new Entity(player.x, player.y, 0, 0, "rice_plant.png")); 
+            plants.push(new Entity({
+              "x": player.x,
+              "y": player.y,
+              "dx": 0,
+              "dy": 0,
+              "img": "rice_plant.png"
+            })); 
         } else if (cur_area.bg_color === "yellow") {
-            origamis.push(new Entity(player.x, player.y, 0, 0, "origami_crane.png")); 
+            origamis.push(new Entity({
+              "x": player.x,
+              "y": player.y,
+              "dx": 0,
+              "dy": 0,
+              "img": "origami_crane.png"
+            }));
         }
     }
+    tick();
 }
 
 function keyUpHandler(e) {
@@ -91,3 +125,11 @@ function keyUpHandler(e) {
     if (e.key === "Up" || e.key === "ArrowUp") player.dy = 0;
     if (e.key === "Down" || e.key === "ArrowDown") player.dy = 0;
 }
+
+window.addEventListener('load', (event) => {
+    keyDownHandler({"key": "Up"});
+});
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+

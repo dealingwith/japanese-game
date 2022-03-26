@@ -1,19 +1,20 @@
 class Entity {
 
-    constructor(x, y, dx=0, dy=0, img, label=null, img_width=0, img_height=0, label_color="white") {
-        this.x = x;
-        this.y = y;
-        this.dx = dx;
-        this.dy = dy;
-        this.label = label;
+    constructor(options) {
+        for (const [key, value] of Object.entries(options)) {
+          this[key] = value;
+        }
+        if (!this.label_color) this.label_color = "white";
 
         this.img = new Image();
-        this.img.src = img;
+        this.img.src = options.img;
+        var this_entity = this;
+        this.img.addEventListener('load', function() {
+          // once the image is loaded, get its width and height
+          this_entity.img_width = this.naturalWidth;
+          this_entity.img_height = this.naturalHeight;
+        }, false);
 
-        this.img_width = img_width;
-        this.img_height = img_height;
-
-        this.label_color = label_color;
     }
 
     draw() {
