@@ -36,57 +36,33 @@ class Area {
         }
     }
 
+    change_specific_area(area, between_args, x, y) {
+        if (between(...between_args)) {
+            if (area) {
+                draw_samurai2 = false;
+                this.is_denied_change_area = false;
+                remove_popup();
+                return area;
+            } else {
+                this.denied_change_area(x, y);
+                return null;
+            }
+        }
+    }
+
     change_area(x, _y, _width, _height) {
         let width = _width/2;
         let height = _height/2;
         let y = _y+height;
-        if (between([x+width, y-height], [canvas.width/2 - 25, 0], [canvas.width/2 + 25, 10])) {
-            if (this.north) {
-                draw_samurai2 = false;
-                this.is_denied_change_area = false;
-                remove_popup();
-                return this.north;
-            } else {
-                this.denied_change_area(x, y);
-                return null;
-            }
-        }
 
-        if (between([x+width, y+height], [canvas.width/2 - 25, canvas.height-10], [canvas.width/2 + 25, canvas.height])) {
-            if (this.south) {
-                draw_samurai2 = false;
-                this.is_denied_change_area = false;
-                remove_popup();
-                return this.south;
-            } else {
-                this.denied_change_area(x, y);
-                return null;
-            }
-        }
-
-        if (between([x, y], [0, canvas.height/2 - 25], [10, canvas.height/2 + 25])) {
-            if (this.west) {
-                draw_samurai2 = false;
-                this.is_denied_change_area = false;
-                remove_popup();
-                return this.west;
-            } else {
-                this.denied_change_area(x, y);
-                return null;
-            }
-        }
-
-        if (between([x+width, y], [canvas.width-10, canvas.height/2 - 25], [canvas.width, canvas.height/2 + 25])) {
-            if (this.east) {
-                draw_samurai2 = false;
-                this.is_denied_change_area = false;
-                remove_popup();
-                return this.east;
-            } else {
-                this.denied_change_area(x, y);
-                return null;
-            }
-        }
+        let north = this.change_specific_area(this.north, [[x+width, y-height], [canvas.width/2 - 25, 0], [canvas.width/2 + 25, 10]], x, y);
+        let south = this.change_specific_area(this.south, [[x+width, y+height], [canvas.width/2 - 25, canvas.height-10], [canvas.width/2 + 25, canvas.height]], x, y);
+        let west = this.change_specific_area(this.west, [[x, y], [0, canvas.height/2 - 25], [10, canvas.height/2 + 25]], x, y);
+        let east = this.change_specific_area(this.east, [[x+width, y], [canvas.width-10, canvas.height/2 - 25], [canvas.width, canvas.height/2 + 25]], x, y);
+        if (north) return north;
+        if (south) return south;
+        if (west) return west;
+        if (east) return east;
 
         return null;
     }

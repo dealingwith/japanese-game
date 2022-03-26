@@ -116,10 +116,9 @@ function keyDownHandler(e) {
             }));
         }
     }
-    tick();
-}
 
-function keyUpHandler(e) {
+    tick();
+
     if (e.key === "Right" || e.key === "ArrowRight") player.dx = 0;
     if (e.key === "Left" || e.key === "ArrowLeft") player.dx = 0;
     if (e.key === "Up" || e.key === "ArrowUp") player.dy = 0;
@@ -127,9 +126,8 @@ function keyUpHandler(e) {
 }
 
 window.addEventListener('load', (event) => {
-    keyDownHandler({"key": "Up"});
+    keyDownHandler({"key": 32});
 });
 
 document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
 
