@@ -8,12 +8,11 @@ class Entity {
 
         this.img = new Image();
         this.img.src = options.img;
-        var _this = this;
-
+        var this_entity = this;
         this.img.addEventListener('load', function() {
           // once the image is loaded, get its width and height
-          _this.img_width = this.naturalWidth;
-          _this.img_height = this.naturalHeight;
+          this_entity.img_width = this.naturalWidth;
+          this_entity.img_height = this.naturalHeight;
         }, false);
 
     }
